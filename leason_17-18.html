@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="https://unpkg.com/vue@next"></script>
+
+    <div id="app"></div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    items: ["uno", "dos", "tres"]
+                }
+            },
+            methods: {
+                remove(index) {
+                    this.items = this.items.filter((elm, i) => i !== index) //Elimina el item sobre el que se pulsa
+                }
+            },
+            template: `
+            <ul>
+                <p>Pulsa sobre el elemento de la lista que quieras borrar:</p>
+                <v-item
+                    v-for="(item, index) in items"
+                    v-bind:text="item"
+                    v-on:click="remove(index)"
+                />
+            </ul>
+            `
+        })
+
+        app.component("v-item", {
+            props: {
+                text: String
+            },
+            methods: {
+                rm() {
+                    this.$emit("remove") //Remite al method "remove" del elemento padre
+                }
+            },
+            template: `
+            <li v-on:click="rm">{{text}}</li>
+            `
+        })
+
+        const vm = app.mount("#app")
+
+    </script>
+
+</body>
+
+</html>

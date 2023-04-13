@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="https://unpkg.com/vue@next"></script>
+
+    <div id="app"></div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    text: "Halloo"
+                }
+            },
+            provide() { //Provee a todos los componentes hijos (aunque sean profundos)
+                return {
+                    anotherText: this.text
+                }
+            },
+            template: `
+            <div>{{text}}</div>
+            <segundo/>
+            `
+        })
+
+        app.component("segundo", {
+            template: `
+            <tercero/>
+            `
+        })
+
+        app.component("tercero", {
+            inject: ["anotherText"], //Recoge lo que se coloca en el "provide" del elemento ancestro (padre, abuelo...)
+            template: `
+            <div>En el tercero: {{anotherText}}</div>
+            `
+        })
+
+        const vm = app.mount("#app")
+
+    </script>
+
+</body>
+
+</html>
